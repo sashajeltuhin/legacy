@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<appManifest xmlns="http://schemas.apprenda.com/DeploymentManifest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.apprenda.com/DeploymentManifest http://apprenda.com/schemas/platform/7.0/DeploymentManifest.xsd">
+  	
+	<!--Valid values for applicationServices level: "None", "Authentication", "Authorization", "Multitenancy", "Billing"-->
+	<applicationServices level="None" />
+
+
+	<presentation strategy="CommingledAppRoot" />
+</appManifest>
