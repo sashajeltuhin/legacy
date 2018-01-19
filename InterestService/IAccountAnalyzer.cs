@@ -22,7 +22,7 @@ namespace InterestService
         [WebInvoke(Method = "GET",
                    RequestFormat = WebMessageFormat.Json,
                    ResponseFormat = WebMessageFormat.Json,
-                   UriTemplate = "GetAccountData/{accountID}")]
+                   UriTemplate = "GetClaimsData/{accountID}")]
         IEnumerable<ClaimsData> GetClaimsData(string accountID);
     }
 
@@ -63,7 +63,7 @@ namespace InterestService
         {
             get { return month; }
             set { month = value; }
-        }
+        } 
 
         [DataMember]
         public double Total
