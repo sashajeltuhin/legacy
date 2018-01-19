@@ -41,5 +41,30 @@ namespace InterestService
             }
             return list;
         }
+
+        public IEnumerable<ClaimsData> GetClaimsData(string accountID)
+        {
+
+            double[] totalClaim = new double[12] { 350, 245, 70, 0, 0, 156, 0, 876, 0, 240, 432, 0 };
+            double[] pocket = new double[12] { 80, 190, 70, 0, 0, 25, 0, 453, 0, 45, 187, 0 };
+            List<ClaimsData> list = new List<ClaimsData>();
+            try
+            {
+                for (int i = 0; i < totalClaim.Length; i++)
+                {
+                    ClaimsData data = new ClaimsData();
+                    data.Month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i + 1);
+                    data.Total = totalClaim[i];
+                    data.Pocket = pocket[i];
+                    list.Add(data);
+                }
+                Log.Log(string.Format("Claims for account {0} successfully processed", accountID), LogLevel.Info);
+            }
+            catch (Exception ex)
+            {
+                Log.Log(string.Format("Error getting claims for the account {0}. {1}", accountID, ex.Message), LogLevel.Error);
+            }
+            return list;
+        }
     }
 }
