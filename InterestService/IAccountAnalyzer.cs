@@ -6,7 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 
-namespace InterestService
+namespace AccountService
 {
     [ServiceContract]
     public interface IAccountAnalyzer
