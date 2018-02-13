@@ -71,31 +71,41 @@ namespace AccountService
 
         private double [] LoadData(int type)
         {
+           
             double[] data = new double[12];
-            string[] fields = new string[12] {"[jan]", "[feb]", "[mar]", "[apr]", "[may]", "[jun]", "[jul]", "[aug]", "[sep]", "[oct]", "[nov]", "[dec]" };
-            DbProviderFactory providerFactory =
-           DbProviderFactories.GetFactory(ConfigurationManager
-           .ConnectionStrings["legacy"].ProviderName);
-            using (DbConnection conn = providerFactory.CreateConnection())
+            string[] fields = new string[12] {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" };
+            ConnectionStringSettings connectionSetting = ConfigurationManager.ConnectionStrings["AccountDB"];
+            if (connectionSetting == null)
             {
-                conn.ConnectionString = ConfigurationManager
-                .ConnectionStrings["legacy"]
-               .ConnectionString;
-                DbCommand command = conn.CreateCommand();
-                command.CommandText =
-               "select " + string.Join(",", fields) + $" from [AccountData] where [tupleType] = {type}";
-                Log.Log(string.Format("Executing query with connection string {0}. {1}", command.CommandText), LogLevel.Info);
-                conn.Open();
-                using (DbDataReader reader = command.ExecuteReader())
+                throw new Exception("Connection string AccountDB is not found in the configuration file");
+            }
+            try
+            {
+                DbProviderFactory providerFactory =
+           DbProviderFactories.GetFactory(connectionSetting.ProviderName);
+                using (DbConnection conn = providerFactory.CreateConnection())
                 {
-                    while (reader.Read())
+                    conn.ConnectionString = connectionSetting.ConnectionString;
+                    DbCommand command = conn.CreateCommand();
+                    command.CommandText =
+                   "select " + string.Join(",", fields) + $" from [AccountData] where [tupleType] = {type}";
+                    Log.Log(string.Format("Executing query with connection string {0}. {1}", command.CommandText, connectionSetting.ConnectionString), LogLevel.Info);
+                    conn.Open();
+                    using (DbDataReader reader = command.ExecuteReader())
                     {
-                        for(int i = 0; i < 12; i++)
+                        while (reader.Read())
                         {
-                            data[i] = (double)reader[fields[i]];
+                            for (int i = 0; i < 12; i++)
+                            {
+                                data[i] = (double)reader[fields[i]];                            
+                            }
                         }
                     }
                 }
+            }
+            catch(Exception ex)
+            {
+                Log.Log(string.Format("Issues loading data for account type {0}. Reason: {1}", type, ex), LogLevel.Error);
             }
             return data;
         }
